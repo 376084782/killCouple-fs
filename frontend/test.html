@@ -1,0 +1,62 @@
+<html>
+
+<head>222222</head>
+<style>
+  .demo {
+    width: 40px;
+    height: 60px;
+    position: absolute;
+  }
+
+  .wrap {
+    width: 500px;
+    height: 300px;
+    border: 1px solid grey;
+    position: absolute;
+    top: 200px;
+    left: 200px;
+  }
+</style>
+
+<body>
+  <button onclick="connect()">connect</button>
+  <button onclick="ready()">ready</button>
+  <button onclick="fAnswer(true)">answer true</button>
+  <button onclick="fAnswer(false)">answer false</button>
+  <button onclick="fNext()">to next</button>
+  <button onclick="getTime()">getTime</button>
+  <div class="wrap">
+  </div>
+  <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="http://lib.baomitu.com/socket.io/2.0.3/socket.io.slim.js"></script>
+  <script>
+    var socket = io('http://localhost:5');
+    var answer = 0;
+    var myId = Math.floor(1000 * Math.random());
+    socket.on('10033', function (data) {
+      answer = data.answer;
+      console.log('answer:', answer)
+    });
+    function fAnswer(type) {
+      let ans = type ? answer : 9000;
+      socket.emit(10050, { id: myId, answer: ans })
+    }
+    function fNext() {
+      socket.emit(10070, {})
+    }
+    function connect() {
+      socket.emit(10000, { id: myId, roomid: 1 })
+    }
+
+    function ready() {
+      socket.emit(10010, { id: myId, roomid: 1 })
+    }
+
+    function getTime() {
+      socket.emit(11000, {})
+    }
+
+  </script>
+</body>
+
+</html>
